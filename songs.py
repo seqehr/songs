@@ -1,45 +1,100 @@
 import pygame
+import tkinter as tk
+from tkinter import messagebox
 
-# Initialize Pygame
+# Initialize Pygame for music handling
 pygame.init()
 
-# Set up screen (optional, just to keep pygame active)
-screen = pygame.display.set_mode((400, 300))
-
-# Dictionary to map key combinations to music files
+# Dictionary to map numeric keys to music files
 music_map = {
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_1): "./1.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_2): "./2.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_3): "./3.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_4): "./4.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_5): "./5.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_6): "./6.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_7): "./7.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_8): "./8.mp3"
+    '1': "./1.mp3",
+    '2': "./2.mp3",
+    '3': "./3.mp3",
+    '4': "./4.mp3",
+    '5': "./5.mp3",
+    '6': "./6.mp3",
+    '7': "./7.mp3",
+    '8': "./8.mp3",
+
 }
 
-# Function to handle key presses and play the appropriate song
-def handle_key_press():
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+# Function to play the song based on key press
+def play_song(song):
+    print(f"Playing {song}")
+    pygame.mixer.music.load(song)
+    pygame.mixer.music.play()
 
-        # Check if keys are pressed
-        keys = pygame.key.get_pressed()
+# Function to handle key press events
+def handle_key_press(event):
+    # Log key event details for debugging
+    print(f"Key pressed: {event.keysym}, Keycode: {event.keycode}")
+    
+    # Check which key is pressed
+    key = event.keysym
 
-        # Loop through the music map and check for key combinations
-        for key_combo, song in music_map.items():
-            if all(keys[key] for key in key_combo):
-                print(f"Playing {song} for combination {key_combo}")
-                pygame.mixer.music.load(song)
-                pygame.mixer.music.play()
+    # Log detected key
+    print(f"Detected key: {key}")
 
-        pygame.display.update()
+    # Play the corresponding song if key is in music_map
+    if key in music_map:
+        play_song(music_map[key])
+    else:
+        print("No action for this key")
 
-# Call the function to handle key presses
-handle_key_press()
+# Function to stop music
+def stop_music():
+    pygame.mixer.music.stop()
+
+# Function to display available shortcuts
+def show_shortcuts():
+    shortcuts = "\n".join([f"{key}: {value}" for key, value in music_map.items()])
+    messagebox.showinfo("Keyboard Shortcuts", shortcuts)
+
+# Function to add a new song to the shortcuts
+def add_song(key, song_path):
+    if key in music_map:
+        print(f"Key {key} already in use. Updating song.")
+    music_map[key] = song_path
+    print(f"Added/Updated song: {key} -> {song_path}")
+
+# Function to remove a song from the shortcuts
+def remove_song(key):
+    if key in music_map:
+        del music_map[key]
+        print(f"Removed song associated with key: {key}")
+    else:
+        print(f"No song associated with key: {key}")
+
+# Initialize Tkinter for the UI
+root = tk.Tk()
+root.title("Music Shortcut Player")
+root.geometry("400x300")
+
+# Bind keyboard events to Tkinter window
+root.bind('<KeyPress>', handle_key_press)
+
+# Create UI elements
+title_label = tk.Label(root, text="Music Shortcut Player", font=("Arial", 16))
+title_label.pack(pady=20)
+
+shortcuts_button = tk.Button(root, text="Show Shortcuts", command=show_shortcuts)
+shortcuts_button.pack(pady=10)
+
+stop_button = tk.Button(root, text="Stop Music", command=stop_music)
+stop_button.pack(pady=10)
+
+exit_button = tk.Button(root, text="Exit", command=root.quit)
+exit_button.pack(pady=10)
+
+# Example usage
+# Add a new song shortcut
+# add_song('4', "song4.mp3")
+
+# Remove an existing song shortcut
+# remove_song('2')
+
+# Start the Tkinter event loop
+root.mainloop()
 
 # Quit pygame when done
 pygame.quit()
