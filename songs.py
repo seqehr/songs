@@ -13,7 +13,9 @@ music_map = {
     (pygame.K_LALT, pygame.K_DELETE, pygame.K_3): "./3.mp3",
     (pygame.K_LALT, pygame.K_DELETE, pygame.K_4): "./4.mp3",
     (pygame.K_LALT, pygame.K_DELETE, pygame.K_5): "./5.mp3",
-    (pygame.K_LALT, pygame.K_DELETE, pygame.K_6): "./6.mp3"
+    (pygame.K_LALT, pygame.K_DELETE, pygame.K_6): "./6.mp3",
+    (pygame.K_LALT, pygame.K_DELETE, pygame.K_7): "./7.mp3",
+    (pygame.K_LALT, pygame.K_DELETE, pygame.K_8): "./8.mp3"
 }
 
 # Function to handle key presses and play the appropriate song
